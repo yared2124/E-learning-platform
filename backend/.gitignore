@@ -2,3 +2,4 @@ node_modules
 .env
 E-learning.db
 mvc.txt
+.DS_Store
