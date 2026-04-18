@@ -23,12 +23,9 @@ const Course = {
     return rows[0];
   },
   findByInstructor: async (instructorId) => {
-    const [rows] = await pool.execute(
-      "SELECT * FROM Courses WHERE instructor_id = ?",
-      [instructorId],
-    );
-    return rows;
-  },
+  const [rows] = await pool.execute('SELECT * FROM Courses WHERE instructor_id = ?', [instructorId]);
+  return rows;
+},
   create: async (title, description, instructorId, thumbnail, syllabus) => {
     const [result] = await pool.execute(
       "INSERT INTO Courses (title, description, instructor_id, thumbnail, syllabus) VALUES (?, ?, ?, ?, ?)",
