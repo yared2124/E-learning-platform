@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import errorHandler from "./middleware/errorHandler.js";
+import cors from "cors";
 
 import authRoutes from "./routes/authRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
@@ -26,6 +27,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+//
+app.use(cors({ origin: true, credentials: true }));
 
 // Make user available in all views (will be set by auth middleware)
 app.use((req, res, next) => {
