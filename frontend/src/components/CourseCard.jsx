@@ -1,26 +1,24 @@
 import { Link } from "react-router-dom";
-import { BookOpen } from "lucide-react";
+import { BookOpen, User, Clock, ArrowRight } from "lucide-react";
 
 export default function CourseCard({ course }) {
   return (
-    <div className="glass-card" style={{ padding: "1.5rem" }}>
-      <BookOpen
-        size={32}
-        style={{ marginBottom: "0.5rem", color: "#a777e3" }}
-      />
-      <h3>{course.title}</h3>
-      <p style={{ opacity: 0.8, marginTop: "0.5rem" }}>
-        {course.description?.slice(0, 80)}...
-      </p>
-      <p style={{ fontSize: "0.8rem", marginTop: "1rem" }}>
-        Instructor: {course.instructor_name}
-      </p>
-      <Link
-        to={`/courses/${course.course_id}`}
-        className="btn-3d"
-        style={{ display: "inline-block", marginTop: "1rem" }}
-      >
+    <div className="glass-card course-card">
+      <div className="card-glow"></div>
+      <div className="card-icon">
+        <BookOpen size={36} />
+      </div>
+      <h3 className="card-title">{course.title}</h3>
+      <p className="card-description">{course.description?.slice(0, 100)}...</p>
+      <div className="card-meta">
+        <div className="meta-item">
+          <User size={16} />
+          <span>{course.instructor_name}</span>
+        </div>
+      </div>
+      <Link to={`/courses/${course.course_id}`} className="btn-3d card-btn">
         View Course
+        <ArrowRight size={18} style={{ marginLeft: "8px" }} />
       </Link>
     </div>
   );
