@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { LogIn } from "lucide-react";
+import { LogIn, Mail, Lock, Sparkles } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,68 +19,60 @@ export default function Login() {
   };
 
   return (
-    <div
-      className="container"
-      style={{
-        minHeight: "80vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <div
-        className="glass-card"
-        style={{ padding: "2rem", width: "100%", maxWidth: "400px" }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "1.5rem" }}>Login</h2>
+    <div className="auth-container">
+      <div className="glass-card auth-card">
+        <div className="auth-glow"></div>
+        <h2 className="auth-title">Welcome Back</h2>
+        <p className="auth-subtitle">
+          Sign in to continue your learning journey
+        </p>
+
         {error && (
           <div
-            style={{
-              color: "#ff6b6b",
-              textAlign: "center",
-              marginBottom: "1rem",
-            }}
+            className="form-error"
+            style={{ textAlign: "center", marginBottom: "1rem" }}
           >
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1rem" }}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1.5rem" }}
-            required
-          />
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="input-wrapper">
+            <input
+              type="email"
+              placeholder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input-3d"
+              required
+            />
+            <Mail className="input-icon" size={18} />
+          </div>
+
+          <div className="input-wrapper">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input-3d"
+              required
+            />
+            <Lock className="input-icon" size={18} />
+          </div>
+
           <button
             type="submit"
             className="btn-3d"
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              gap: "0.5rem",
-            }}
+            style={{ width: "100%", marginTop: "0.5rem" }}
           >
-            <LogIn size={18} /> Login
+            <LogIn size={18} style={{ marginRight: "8px" }} />
+            Sign In
           </button>
         </form>
-        <p style={{ textAlign: "center", marginTop: "1rem" }}>
-          No account?{" "}
-          <Link to="/register" style={{ color: "#a777e3" }}>
-            Register
-          </Link>
+
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Create one</Link>
         </p>
       </div>
     </div>
