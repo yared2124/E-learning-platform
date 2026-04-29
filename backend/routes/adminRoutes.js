@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use(authenticate, requireAuth, allowRoles("admin"));
 router.get("/users", listUsers);
-router.post("/users/:id/role", updateUserRole);
-router.post("/users/:id/delete", deleteUser);
+router.put("/users/:id/role", updateUserRole);
+router.delete("/users/:id", deleteUser);
 
 export default router;
