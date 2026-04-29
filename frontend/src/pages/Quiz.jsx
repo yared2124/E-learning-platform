@@ -11,22 +11,26 @@ export default function Quiz() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.quizzes.getById(quizId).then((res) => {
-      setQuiz(res.quiz);
-      setQuestions(res.questions);
-      setLoading(false);
-    });
+    api.quizzes
+      .getById(quizId)
+      .then((res) => {
+        setQuiz(res.quiz);
+        setQuestions(res.questions);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [quizId]);
 
-  const handleAnswer = (qid, oid) =>
-    setAnswers((prev) => ({ ...prev, [qid]: oid }));
+  const handleAnswer = (questionId, optionId) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
+  };
 
   const handleSubmit = async () => {
     const res = await api.quizzes.submit(quizId, answers);
     setResult(res);
   };
 
-  if (loading) return <div className="spinner" />;
+  if (loading) return <div className="spinner"></div>;
   if (result) {
     return (
       <div className="container" style={{ textAlign: "center" }}>
@@ -45,6 +49,8 @@ export default function Quiz() {
       </div>
     );
   }
+
+  if (!quiz) return <div className="container">Quiz not found</div>;
 
   return (
     <div className="container">
