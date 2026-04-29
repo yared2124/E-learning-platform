@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { api } from "../../api/client";
-import { Plus, Edit, Trash2, Save, X } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  ArrowLeft,
+  PlayCircle,
+  ExternalLink,
+} from "lucide-react";
 
 export default function Lessons() {
   const { courseId } = useParams();
-  const navigate = useNavigate();
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -69,15 +77,19 @@ export default function Lessons() {
 
   return (
     <div className="container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
-        <h1>Manage Lessons</h1>
+      <Link to="/dashboard" className="back-link">
+        <ArrowLeft size={18} />
+        Back to Dashboard
+      </Link>
+
+      <div className="page-header">
+        <div className="page-header-content">
+          <PlayCircle size={40} />
+          <div>
+            <h1>Manage Lessons</h1>
+            <p>{lessons.length} lessons in this course</p>
+          </div>
+        </div>
         <button
           className="btn-3d"
           onClick={() => {
@@ -86,51 +98,61 @@ export default function Lessons() {
             setFormData({ title: "", contentUrl: "", order: 0 });
           }}
         >
-          <Plus size={18} /> Add Lesson
+          <Plus size={18} />
+          Add Lesson
         </button>
       </div>
 
       {showForm && (
-        <div
-          className="glass-card"
-          style={{ padding: "1.5rem", marginBottom: "2rem" }}
-        >
-          <h3>{editingLesson ? "Edit Lesson" : "New Lesson"}</h3>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Lesson Title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              className="input-3d"
-              style={{ width: "100%", marginBottom: "1rem" }}
-              required
-            />
-            <input
-              type="url"
-              placeholder="Video URL (YouTube, etc.)"
-              value={formData.contentUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, contentUrl: e.target.value })
-              }
-              className="input-3d"
-              style={{ width: "100%", marginBottom: "1rem" }}
-            />
-            <input
-              type="number"
-              placeholder="Order (1,2,3...)"
-              value={formData.order}
-              onChange={(e) =>
-                setFormData({ ...formData, order: parseInt(e.target.value) })
-              }
-              className="input-3d"
-              style={{ width: "100%", marginBottom: "1rem" }}
-            />
-            <div style={{ display: "flex", gap: "1rem" }}>
+        <div className="glass-card form-card">
+          <h3>{editingLesson ? "Edit Lesson" : "Add New Lesson"}</h3>
+          <form onSubmit={handleSubmit} className="lesson-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Lesson Title</label>
+                <input
+                  type="text"
+                  placeholder="Enter lesson title"
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  className="input-3d"
+                  required
+                />
+              </div>
+              <div className="form-group small">
+                <label>Order</label>
+                <input
+                  type="number"
+                  placeholder="1"
+                  value={formData.order}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      order: parseInt(e.target.value),
+                    })
+                  }
+                  className="input-3d"
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Video URL</label>
+              <input
+                type="url"
+                placeholder="https://youtube.com/watch?v=..."
+                value={formData.contentUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, contentUrl: e.target.value })
+                }
+                className="input-3d"
+              />
+            </div>
+            <div className="form-actions">
               <button type="submit" className="btn-3d">
-                <Save size={16} /> Save
+                <Save size={16} />
+                {editingLesson ? "Update" : "Save"}
               </button>
               <button
                 type="button"
@@ -138,51 +160,69 @@ export default function Lessons() {
                   setShowForm(false);
                   setEditingLesson(null);
                 }}
-                className="btn-3d"
-                style={{ background: "#666" }}
+                className="btn-cancel"
               >
-                <X size={16} /> Cancel
+                <X size={16} />
+                Cancel
               </button>
             </div>
           </form>
         </div>
       )}
 
-      <div className="course-grid">
-        {lessons.map((lesson) => (
-          <div
-            key={lesson.lesson_id}
-            className="glass-card"
-            style={{ padding: "1.5rem" }}
-          >
-            <h3>{lesson.title}</h3>
-            <p>Order: {lesson.order}</p>
-            <a
-              href={lesson.content_url}
-              target="_blank"
-              rel="noopener noreferrer"
+      {lessons.length === 0 ? (
+        <div
+          className="glass-card empty-state"
+          style={{ padding: "3rem", textAlign: "center" }}
+        >
+          <PlayCircle
+            size={64}
+            style={{ color: "var(--primary-cyan)", marginBottom: "1rem" }}
+          />
+          <h3>No lessons yet</h3>
+          <p>Add your first lesson to start building this course</p>
+        </div>
+      ) : (
+        <div className="lessons-grid">
+          {lessons.map((lesson, idx) => (
+            <div
+              key={lesson.lesson_id}
+              className="glass-card lesson-manage-card"
+              style={{ animationDelay: `${idx * 0.1}s` }}
             >
-              Watch
-            </a>
-            <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
-              <button
-                onClick={() => startEdit(lesson)}
-                className="btn-3d"
-                style={{ padding: "0.3rem 1rem" }}
-              >
-                <Edit size={16} /> Edit
-              </button>
-              <button
-                onClick={() => handleDelete(lesson.lesson_id)}
-                className="btn-3d"
-                style={{ background: "#dc2626", padding: "0.3rem 1rem" }}
-              >
-                <Trash2 size={16} /> Delete
-              </button>
+              <div className="lesson-order">{lesson.order}</div>
+              <div className="lesson-manage-content">
+                <h3>{lesson.title}</h3>
+                {lesson.content_url && (
+                  <a
+                    href={lesson.content_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="lesson-video-link"
+                  >
+                    <ExternalLink size={14} />
+                    Watch Video
+                  </a>
+                )}
+              </div>
+              <div className="lesson-manage-actions">
+                <button
+                  onClick={() => startEdit(lesson)}
+                  className="btn-icon edit"
+                >
+                  <Edit size={16} />
+                </button>
+                <button
+                  onClick={() => handleDelete(lesson.lesson_id)}
+                  className="btn-icon delete"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
