@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../../api/client";
-import { Save, Trash2, BookOpen, FileQuestion } from "lucide-react";
+import {
+  Save,
+  Trash2,
+  BookOpen,
+  FileQuestion,
+  ArrowLeft,
+  Image,
+  FileText,
+} from "lucide-react";
 
 export default function EditCourse() {
   const { id } = useParams();
@@ -33,7 +41,7 @@ export default function EditCourse() {
     e.preventDefault();
     try {
       await api.courses.update(id, { title, description, thumbnail, syllabus });
-      navigate("/dashboard/instructor");
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }
@@ -47,7 +55,7 @@ export default function EditCourse() {
     ) {
       try {
         await api.courses.delete(id);
-        navigate("/dashboard/instructor");
+        navigate("/dashboard");
       } catch (err) {
         setError(err.message);
       }
@@ -57,100 +65,106 @@ export default function EditCourse() {
   if (loading) return <div className="spinner" />;
 
   return (
-    <div className="container" style={{ maxWidth: "800px" }}>
-      <div className="glass-card" style={{ padding: "2rem" }}>
-        <h1 style={{ marginBottom: "1.5rem" }}>Edit Course</h1>
-        {error && (
-          <p style={{ color: "#ff6b6b", marginBottom: "1rem" }}>{error}</p>
-        )}
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1rem" }}
-            required
-          />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="4"
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1rem" }}
-            required
-          />
-          <input
-            type="text"
-            value={thumbnail}
-            onChange={(e) => setThumbnail(e.target.value)}
-            placeholder="Thumbnail URL"
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1rem" }}
-          />
-          <textarea
-            value={syllabus}
-            onChange={(e) => setSyllabus(e.target.value)}
-            rows="3"
-            placeholder="Syllabus"
-            className="input-3d"
-            style={{ width: "100%", marginBottom: "1.5rem" }}
-          />
-          <button
-            type="submit"
-            className="btn-3d"
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
-            <Save size={18} /> Update Course
+    <div className="container">
+      <Link to="/dashboard" className="back-link">
+        <ArrowLeft size={18} />
+        Back to Dashboard
+      </Link>
+
+      <div className="form-container">
+        <div className="form-header">
+          <div className="form-icon">
+            <BookOpen size={40} />
+          </div>
+          <h1>Edit Course</h1>
+          <p>Update your course details</p>
+        </div>
+
+        {error && <div className="error-message">{error}</div>}
+
+        <form onSubmit={handleSubmit} className="course-form">
+          <div className="form-group">
+            <label>
+              <BookOpen size={18} />
+              Course Title
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="input-3d"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              <FileText size={18} />
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows="4"
+              className="input-3d"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              <Image size={18} />
+              Thumbnail URL
+            </label>
+            <input
+              type="text"
+              value={thumbnail}
+              onChange={(e) => setThumbnail(e.target.value)}
+              placeholder="https://example.com/image.jpg"
+              className="input-3d"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>
+              <FileText size={18} />
+              Syllabus
+            </label>
+            <textarea
+              value={syllabus}
+              onChange={(e) => setSyllabus(e.target.value)}
+              rows="3"
+              placeholder="Outline the course topics"
+              className="input-3d"
+            />
+          </div>
+
+          <button type="submit" className="btn-3d btn-submit">
+            <Save size={18} />
+            Update Course
           </button>
         </form>
 
-        <div
-          style={{
-            marginTop: "2rem",
-            borderTop: "1px solid rgba(255,255,255,0.2)",
-            paddingTop: "1.5rem",
-          }}
-        >
+        <div className="content-section">
           <h3>Course Content</h3>
-          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-            <Link
-              to={`/instructor/lessons/${id}`}
-              className="btn-3d"
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <BookOpen size={18} /> Manage Lessons
+          <div className="content-actions">
+            <Link to={`/instructor/lessons/${id}`} className="btn-3d">
+              <BookOpen size={18} />
+              Manage Lessons
             </Link>
-            <Link
-              to={`/instructor/manage-quiz/${id}`}
-              className="btn-3d"
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <FileQuestion size={18} /> Manage Quizzes
+            <Link to={`/instructor/manage-quiz/${id}`} className="btn-3d">
+              <FileQuestion size={18} />
+              Manage Quizzes
             </Link>
           </div>
         </div>
 
-        <div
-          style={{
-            marginTop: "2rem",
-            borderTop: "1px solid rgba(255,255,255,0.2)",
-            paddingTop: "1.5rem",
-          }}
-        >
-          <h3 style={{ color: "#ff6b6b" }}>Danger Zone</h3>
-          <button
-            onClick={handleDelete}
-            className="btn-3d"
-            style={{
-              background: "#dc2626",
-              marginTop: "0.5rem",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-          >
-            <Trash2 size={18} /> Delete Course Permanently
+        <div className="danger-zone">
+          <h3>Danger Zone</h3>
+          <p>Once you delete a course, there is no going back.</p>
+          <button onClick={handleDelete} className="btn-danger">
+            <Trash2 size={18} />
+            Delete Course Permanently
           </button>
         </div>
       </div>
