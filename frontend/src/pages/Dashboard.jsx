@@ -9,6 +9,10 @@ import {
   Trash2,
   BookOpen,
   FileQuestion,
+  GraduationCap,
+  Trophy,
+  Target,
+  ArrowRight,
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -46,7 +50,6 @@ export default function Dashboard() {
     ) {
       try {
         await api.courses.delete(courseId);
-        // Refresh dashboard after deletion
         fetchDashboard();
       } catch (err) {
         alert(err.message);
@@ -65,45 +68,101 @@ export default function Dashboard() {
   if (user.role === "student") {
     return (
       <div className="container">
-        <h1 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <BarChart3 /> Student Dashboard
-        </h1>
+        <div className="dashboard-header">
+          <div className="dashboard-welcome">
+            <GraduationCap size={40} />
+            <div>
+              <h1>Welcome back, {user.name}!</h1>
+              <p>Continue your learning journey</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="dashboard-stats">
+          <div className="stat-card">
+            <div className="stat-icon cyan">
+              <BookOpen size={24} />
+            </div>
+            <div className="stat-info">
+              <h3>{data.progressList?.length || 0}</h3>
+              <p>Enrolled Courses</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon purple">
+              <Trophy size={24} />
+            </div>
+            <div className="stat-info">
+              <h3>
+                {data.progressList?.filter((p) => p.percentage === 100)
+                  .length || 0}
+              </h3>
+              <p>Completed</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon pink">
+              <Target size={24} />
+            </div>
+            <div className="stat-info">
+              <h3>
+                {data.progressList?.length > 0
+                  ? Math.round(
+                      data.progressList.reduce(
+                        (acc, p) => acc + p.percentage,
+                        0,
+                      ) / data.progressList.length,
+                    )
+                  : 0}
+                %
+              </h3>
+              <p>Avg. Progress</p>
+            </div>
+          </div>
+        </div>
+
         {!data.progressList || data.progressList.length === 0 ? (
           <div
             className="glass-card"
-            style={{ padding: "2rem", textAlign: "center" }}
+            style={{ padding: "3rem", textAlign: "center" }}
           >
-            <p>You are not enrolled in any course yet.</p>
-            <Link
-              to="/courses"
-              className="btn-3d"
-              style={{ display: "inline-block", marginTop: "1rem" }}
+            <BookOpen
+              size={64}
+              style={{ color: "var(--primary-cyan)", marginBottom: "1rem" }}
+            />
+            <h3 style={{ marginBottom: "0.5rem" }}>No courses yet</h3>
+            <p
+              style={{ marginBottom: "1.5rem", color: "rgba(255,255,255,0.6)" }}
             >
+              Start your learning journey by enrolling in a course
+            </p>
+            <Link to="/courses" className="btn-3d">
               Browse Courses
+              <ArrowRight size={18} style={{ marginLeft: "8px" }} />
             </Link>
           </div>
         ) : (
           <div className="course-grid">
             {data.progressList.map((p) => (
-              <div
-                key={p.courseId}
-                className="glass-card"
-                style={{ padding: "1.5rem" }}
-              >
-                <h3>{p.title}</h3>
-                <div className="progress-bar">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${p.percentage}%` }}
-                  ></div>
+              <div key={p.courseId} className="glass-card progress-card">
+                <div className="progress-card-header">
+                  <BookOpen size={28} />
+                  <h3>{p.title}</h3>
                 </div>
-                <p>{p.percentage}% completed</p>
-                <Link
-                  to={`/courses/${p.courseId}`}
-                  className="btn-3d"
-                  style={{ display: "inline-block", marginTop: "1rem" }}
-                >
-                  Continue
+                <div className="progress-info">
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${p.percentage}%` }}
+                    ></div>
+                  </div>
+                  <span className="progress-text">
+                    {p.percentage}% Complete
+                  </span>
+                </div>
+                <Link to={`/courses/${p.courseId}`} className="btn-3d card-btn">
+                  Continue Learning
+                  <ArrowRight size={18} style={{ marginLeft: "8px" }} />
                 </Link>
               </div>
             ))}
@@ -116,38 +175,62 @@ export default function Dashboard() {
   // Instructor dashboard
   return (
     <div className="container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-          marginBottom: "2rem",
-        }}
-      >
-        <h1>Instructor Dashboard</h1>
-        <Link
-          to="/instructor/create-course"
-          className="btn-3d"
-          style={{ display: "flex", gap: "0.5rem" }}
-        >
-          <PlusCircle size={18} /> New Course
+      <div className="dashboard-header">
+        <div className="dashboard-welcome">
+          <BarChart3 size={40} />
+          <div>
+            <h1>Instructor Dashboard</h1>
+            <p>Manage your courses and track student progress</p>
+          </div>
+        </div>
+        <Link to="/instructor/create-course" className="btn-3d">
+          <PlusCircle size={18} style={{ marginRight: "8px" }} />
+          New Course
         </Link>
+      </div>
+
+      <div className="dashboard-stats">
+        <div className="stat-card">
+          <div className="stat-icon cyan">
+            <BookOpen size={24} />
+          </div>
+          <div className="stat-info">
+            <h3>{data.courses?.length || 0}</h3>
+            <p>Total Courses</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon purple">
+            <FileQuestion size={24} />
+          </div>
+          <div className="stat-info">
+            <h3>
+              {data.courses?.reduce(
+                (acc, c) => acc + (c.enrollmentCount || 0),
+                0,
+              ) || 0}
+            </h3>
+            <p>Total Enrollments</p>
+          </div>
+        </div>
       </div>
 
       {!data.courses || data.courses.length === 0 ? (
         <div
           className="glass-card"
-          style={{ padding: "2rem", textAlign: "center" }}
+          style={{ padding: "3rem", textAlign: "center" }}
         >
-          <p>You haven't created any courses yet.</p>
-          <Link
-            to="/instructor/create-course"
-            className="btn-3d"
-            style={{ display: "inline-block", marginTop: "1rem" }}
-          >
+          <PlusCircle
+            size={64}
+            style={{ color: "var(--primary-purple)", marginBottom: "1rem" }}
+          />
+          <h3 style={{ marginBottom: "0.5rem" }}>No courses created</h3>
+          <p style={{ marginBottom: "1.5rem", color: "rgba(255,255,255,0.6)" }}>
+            Create your first course and start teaching
+          </p>
+          <Link to="/instructor/create-course" className="btn-3d">
             Create Your First Course
+            <ArrowRight size={18} style={{ marginLeft: "8px" }} />
           </Link>
         </div>
       ) : (
@@ -155,67 +238,35 @@ export default function Dashboard() {
           {data.courses.map((course) => (
             <div
               key={course.course_id}
-              className="glass-card"
-              style={{ padding: "1.5rem" }}
+              className="glass-card course-manage-card"
             >
-              <h3>{course.title}</h3>
-              <p style={{ opacity: 0.8 }}>
-                {course.description?.slice(0, 100)}
+              <div className="course-manage-header">
+                <BookOpen size={28} />
+                <h3>{course.title}</h3>
+              </div>
+              <p className="course-manage-desc">
+                {course.description?.slice(0, 80)}...
               </p>
-              <div
-                style={{
-                  marginTop: "1rem",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.5rem",
-                }}
-              >
+              <div className="course-manage-meta">
+                <span>{course.enrollmentCount || 0} students</span>
+                <span>{course.lessonCount || 0} lessons</span>
+              </div>
+              <div className="course-manage-actions">
                 <Link
                   to={`/instructor/edit-course/${course.course_id}`}
-                  className="btn-3d"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                    padding: "0.3rem 0.8rem",
-                  }}
+                  className="btn-action edit"
                 >
                   <Edit size={16} /> Edit
                 </Link>
                 <Link
                   to={`/instructor/lessons/${course.course_id}`}
-                  className="btn-3d"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                    padding: "0.3rem 0.8rem",
-                  }}
+                  className="btn-action"
                 >
-                  <BookOpen size={16} /> Lessons
-                </Link>
-                <Link
-                  to={`/instructor/manage-quiz/${course.course_id}`}
-                  className="btn-3d"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                    padding: "0.3rem 0.8rem",
-                  }}
-                >
-                  <FileQuestion size={16} /> Quizzes
+                  Lessons
                 </Link>
                 <button
                   onClick={() => deleteCourse(course.course_id)}
-                  className="btn-3d"
-                  style={{
-                    background: "#dc2626",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.3rem",
-                    padding: "0.3rem 0.8rem",
-                  }}
+                  className="btn-action delete"
                 >
                   <Trash2 size={16} /> Delete
                 </button>
