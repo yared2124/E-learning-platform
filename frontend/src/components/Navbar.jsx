@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { GraduationCap, LogOut, User, Shield, BookOpen } from "lucide-react";
+import { BookOpen, GraduationCap, LogOut, Shield, User } from "lucide-react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -8,25 +8,27 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="nav-brand">
-        <GraduationCap size={32} />
+        <span className="brand-mark">
+          <GraduationCap size={24} />
+        </span>
         <span>E-Learn</span>
       </Link>
       <div className="nav-links">
-        <Link to="/">
+        <NavLink to="/">
           <BookOpen size={18} style={{ marginRight: "6px" }} />
           Courses
-        </Link>
+        </NavLink>
         {user && (
-          <Link to="/dashboard">
+          <NavLink to="/dashboard">
             <User size={18} style={{ marginRight: "6px" }} />
             Dashboard
-          </Link>
+          </NavLink>
         )}
         {user?.role === "admin" && (
-          <Link to="/admin/users">
+          <NavLink to="/admin/users">
             <Shield size={18} style={{ marginRight: "6px" }} />
             Users
-          </Link>
+          </NavLink>
         )}
         {user ? (
           <button onClick={logout} className="btn-logout">
