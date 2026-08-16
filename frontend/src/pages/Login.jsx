@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { LogIn, Mail, Lock, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  LineChart,
+  Lock,
+  LogIn,
+  Mail,
+  Sparkles,
+} from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,62 +28,81 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="glass-card auth-card">
-        <div className="auth-glow"></div>
-        <h2 className="auth-title">Welcome Back</h2>
-        <p className="auth-subtitle">
-          Sign in to continue your learning journey
+    <div className="auth-page">
+      <section className="auth-visual">
+        <div className="auth-brand-mark">
+          <GraduationCap size={34} />
+        </div>
+        <p className="eyebrow">Smart learning portal</p>
+        <h1>Build skills with a dashboard that keeps every lesson moving.</h1>
+        <p>
+          Track progress, continue courses, and manage learning activity from
+          one modern workspace.
         </p>
-
-        {error && (
-          <div
-            className="form-error"
-            style={{ textAlign: "center", marginBottom: "1rem" }}
-          >
-            {error}
+        <div className="auth-preview">
+          <div className="preview-row">
+            <span><BookOpen size={16} /> Active courses</span>
+            <strong>12</strong>
           </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="input-wrapper">
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-3d"
-              required
-            />
-            <Mail className="input-icon" size={18} />
+          <div className="preview-meter">
+            <span style={{ width: "76%" }}></span>
           </div>
-
-          <div className="input-wrapper">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-3d"
-              required
-            />
-            <Lock className="input-icon" size={18} />
+          <div className="preview-row">
+            <span><LineChart size={16} /> Weekly progress</span>
+            <strong>+24%</strong>
           </div>
+        </div>
+      </section>
 
-          <button
-            type="submit"
-            className="btn-3d"
-            style={{ width: "100%", marginTop: "0.5rem" }}
-          >
-            <LogIn size={18} style={{ marginRight: "8px" }} />
-            Sign In
-          </button>
-        </form>
+      <section className="auth-panel">
+        <div className="auth-card">
+          <div className="auth-icon">
+            <Sparkles size={22} />
+          </div>
+          <h2 className="auth-title">Welcome back</h2>
+          <p className="auth-subtitle">Sign in to continue learning.</p>
 
-        <p className="auth-footer">
-          Don't have an account? <Link to="/register">Create one</Link>
-        </p>
-      </div>
+          {error && <div className="form-error auth-error">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <label className="input-wrapper">
+              <span>Email address</span>
+              <Mail className="input-icon" size={18} />
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-3d"
+                required
+              />
+            </label>
+
+            <label className="input-wrapper">
+              <span>Password</span>
+              <Lock className="input-icon" size={18} />
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-3d"
+                required
+              />
+            </label>
+
+            <button type="submit" className="btn-3d auth-submit">
+              <LogIn size={18} />
+              Sign in
+              <ArrowRight size={18} />
+            </button>
+          </form>
+
+          <p className="auth-footer">
+            Don't have an account? <Link to="/register">Create one</Link>
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
