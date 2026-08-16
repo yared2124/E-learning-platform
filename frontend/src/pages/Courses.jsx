@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
 import CourseCard from "../components/CourseCard";
-import { BookOpen, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Sparkles, Trophy, Users } from "lucide-react";
+import heroImage from "../assets/hero.png";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
@@ -19,19 +20,47 @@ export default function Courses() {
   return (
     <div className="container">
       <div className="hero">
-        <div className="hero-icon">
-          <BookOpen size={48} />
+        <div className="hero-copy">
+          <span className="eyebrow">
+            <Sparkles size={15} />
+            Premium learning experience
+          </span>
+          <h1>Explore Courses</h1>
+          <p>
+            Discover expert-led courses, follow your progress, and move from
+            lesson to lesson inside a refined learning workspace.
+          </p>
+          <div className="hero-actions">
+            <a href="#course-catalog" className="btn-3d">
+              View catalog
+              <ArrowRight size={18} />
+            </a>
+            <span className="hero-note">{courses.length} courses available</span>
+          </div>
         </div>
-        <h1>Explore Courses</h1>
-        <p>
-          Discover a world of knowledge with our expert-led courses. Start
-          learning today and unlock your potential.
-        </p>
+
+        <div className="hero-visual" aria-hidden="true">
+          <img src={heroImage} alt="" />
+          <div className="hero-metric primary">
+            <BookOpen size={18} />
+            <span>Guided lessons</span>
+          </div>
+          <div className="hero-metric secondary">
+            <Trophy size={18} />
+            <span>Progress tracking</span>
+          </div>
+        </div>
       </div>
 
-      <div className="courses-section">
+      <div className="courses-section" id="course-catalog">
         <div className="section-header">
-          <h2>Available Courses</h2>
+          <div>
+            <span className="eyebrow">
+              <Users size={15} />
+              Course catalog
+            </span>
+            <h2>Available Courses</h2>
+          </div>
           <span className="course-count">{courses.length} courses</span>
         </div>
 
