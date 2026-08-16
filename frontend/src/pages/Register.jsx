@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
-import { UserPlus, User, Mail, Lock, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Lock,
+  Mail,
+  Rocket,
+  Sparkles,
+  User,
+  UserPlus,
+} from "lucide-react";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -20,72 +29,86 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-container">
-      <div className="glass-card auth-card">
-        <div className="auth-glow"></div>
-        <h2 className="auth-title">Create Account</h2>
-        <p className="auth-subtitle">Join us and start learning today</p>
-
-        {error && (
-          <div
-            className="form-error"
-            style={{ textAlign: "center", marginBottom: "1rem" }}
-          >
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="input-wrapper">
-            <input
-              type="text"
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="input-3d"
-              required
-            />
-            <User className="input-icon" size={18} />
-          </div>
-
-          <div className="input-wrapper">
-            <input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-3d"
-              required
-            />
-            <Mail className="input-icon" size={18} />
-          </div>
-
-          <div className="input-wrapper">
-            <input
-              type="password"
-              placeholder="Password (min 6 characters)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-3d"
-              required
-            />
-            <Lock className="input-icon" size={18} />
-          </div>
-
-          <button
-            type="submit"
-            className="btn-3d"
-            style={{ width: "100%", marginTop: "0.5rem" }}
-          >
-            <UserPlus size={18} style={{ marginRight: "8px" }} />
-            Create Account
-          </button>
-        </form>
-
-        <p className="auth-footer">
-          Already have an account? <Link to="/login">Sign in</Link>
+    <div className="auth-page">
+      <section className="auth-visual register-visual">
+        <div className="auth-brand-mark">
+          <Rocket size={34} />
+        </div>
+        <p className="eyebrow">Start your path</p>
+        <h1>Create your learning account and unlock your next course.</h1>
+        <p>
+          Join as a learner, then grow into guided lessons, quizzes, and clear
+          progress tracking.
         </p>
-      </div>
+        <div className="auth-benefits">
+          <span><CheckCircle2 size={16} /> Personal course progress</span>
+          <span><CheckCircle2 size={16} /> Clean student dashboard</span>
+          <span><CheckCircle2 size={16} /> Quiz and lesson tracking</span>
+        </div>
+      </section>
+
+      <section className="auth-panel">
+        <div className="auth-card">
+          <div className="auth-icon">
+            <Sparkles size={22} />
+          </div>
+          <h2 className="auth-title">Create account</h2>
+          <p className="auth-subtitle">Join and start learning today.</p>
+
+          {error && <div className="form-error auth-error">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="auth-form">
+            <label className="input-wrapper">
+              <span>Full name</span>
+              <User className="input-icon" size={18} />
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input-3d"
+                required
+              />
+            </label>
+
+            <label className="input-wrapper">
+              <span>Email address</span>
+              <Mail className="input-icon" size={18} />
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-3d"
+                required
+              />
+            </label>
+
+            <label className="input-wrapper">
+              <span>Password</span>
+              <Lock className="input-icon" size={18} />
+              <input
+                type="password"
+                placeholder="Minimum 6 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-3d"
+                required
+              />
+            </label>
+
+            <button type="submit" className="btn-3d auth-submit">
+              <UserPlus size={18} />
+              Create account
+              <ArrowRight size={18} />
+            </button>
+          </form>
+
+          <p className="auth-footer">
+            Already have an account? <Link to="/login">Sign in</Link>
+          </p>
+        </div>
+      </section>
     </div>
   );
 }
